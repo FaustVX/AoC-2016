@@ -6,8 +6,8 @@ class SplashScreenImpl : ISplashScreen
     {
         var color = Console.ForegroundColor;
         Write(0xcc00, false, "           ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n           █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄ ");
-        Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  $year = 2016\n            ");
-        Write(0xcc00, false, "\n           ");
+        Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  // 2016\n            \n    ");
+        Write(0xcc00, false, "       ");
         Write(0x666666, false, "                    *                                   \n                               |           ");
         Write(0x666666, false, "                        \n                             +-|---+                               \n       ");
         Write(0x666666, false, "                     /  |  /|                               \n                           +-----+ |   ");
@@ -59,11 +59,15 @@ class SplashScreenImpl : ISplashScreen
         Write(0xcccccc, false, " 3 ");
         Write(0x666666, false, "**\n               |:::::::::::| //|     /    ___            /    ");
         Write(0xcccccc, false, " 2 ");
-        Write(0x666666, false, "**\n               |:::::::::::|//|     / / /   /_/_/_/#/#/#/     ");
+        Write(0x666666, false, "**\n               |");
+        Write(0x333333, false, "::::::::");
+        Write(0x9900, true, ":::");
+        Write(0x666666, false, "|//|     / / /   /_/_/_/#/#/#/     ");
         Write(0xcccccc, false, " 1 ");
-        Write(0x666666, false, "**\n             ==============//======+...+====================       \n             - - - - - - -// ");
-        Write(0x666666, false, "- - -/   / - - - - - - - - - -        \n           ==============//|==============================   ");
-        Write(0x666666, false, "      \n                        //|                                        \n           \n");
+        Write(0xffff66, false, "**\n           ");
+        Write(0x666666, false, "  ==============//======+...+====================       \n             - - - - - - -// - - -/   / - -");
+        Write(0x666666, false, " - - - - - - - -        \n           ==============//|==============================         \n       ");
+        Write(0x666666, false, "                 //|                                        \n           \n");
 
         Console.ForegroundColor = color;
         Console.WriteLine();
