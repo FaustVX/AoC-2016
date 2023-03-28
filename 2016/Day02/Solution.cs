@@ -7,12 +7,12 @@ public class Solution : ISolver //, IDisplay
     public object PartOne(string input)
     {
         var code = 0;
-        var machine = new StateMachine();
+        var machine = new StateMachine<StateP1>() { CurrentState = StateP1._5 };
         foreach (var line in input.AsSpan().EnumerateLines())
         {
             foreach (var c in line)
                 machine.Move(c);
-                code = code * 10 + machine.CurrentState.Value;
+            code = code * 10 + (machine.CurrentState.Value - '0');
         }
         return code;
     }
@@ -23,9 +23,10 @@ public class Solution : ISolver //, IDisplay
     }
 }
 
-class StateMachine
+class StateMachine<TState>
+where TState : StateMachine<TState>.IState
 {
-    public State CurrentState { get; private set; } = State._5;
+    public required IState CurrentState { get; set; }
 
     public void Move(char transition)
     => CurrentState = transition switch
@@ -37,45 +38,55 @@ class StateMachine
         _ => throw new UnreachableException(),
     };
 
-    public class State
+    public interface IState
     {
-        public static readonly State _1 = new(1);
-        public static readonly State _2 = new(2);
-        public static readonly State _3 = new(3);
-        public static readonly State _4 = new(4);
-        public static readonly State _5 = new(5);
-        public static readonly State _6 = new(6);
-        public static readonly State _7 = new(7);
-        public static readonly State _8 = new(8);
-        public static readonly State _9 = new(9);
-
-        static State()
-        {
-            _2.Left = _4.Up = _1;
-            _1.Right = _3.Left = _5.Up = _2;
-            _2.Right = _6.Up = _3;
-
-            _1.Down = _5.Left = _7.Up = _4;
-            _2.Down = _4.Right = _6.Left = _8.Up = _5;
-            _3.Down = _5.Right = _9.Up = _6;
-
-            _4.Down = _8.Left = _7;
-            _5.Down = _7.Right = _9.Left = _8;
-            _6.Down = _8.Right = _9;
-        }
-
-        public State(int value)
-        {
-            Value = value;
-
-            Up = Down = Left = Right = this;
-        }
-
-        public int Value { get; }
-
-        public State Up { get; private set; }
-        public State Down { get; private set; }
-        public State Left { get; private set; }
-        public State Right { get; private set; }
+        public abstract char Value { get; }
+        public abstract TState Up { get; }
+        public abstract TState Down { get; }
+        public abstract TState Left { get; }
+        public abstract TState Right { get; }
     }
+}
+
+public class StateP1 : StateMachine<StateP1>.IState
+{
+    private static readonly Dictionary<(int x, int y), StateP1> _states = new(capacity: 9);
+    public static readonly StateP1 _1 = new('1', (0, 0));
+    public static readonly StateP1 _2 = new('2', (1, 0));
+    public static readonly StateP1 _3 = new('3', (2, 0));
+    public static readonly StateP1 _4 = new('4', (0, 1));
+    public static readonly StateP1 _5 = new('5', (1, 1));
+    public static readonly StateP1 _6 = new('6', (2, 1));
+    public static readonly StateP1 _7 = new('7', (0, 2));
+    public static readonly StateP1 _8 = new('8', (1, 2));
+    public static readonly StateP1 _9 = new('9', (2, 2));
+
+    static StateP1()
+    {
+        foreach (var ((x, y), state) in _states)
+        {
+            if (_states.TryGetValue((x, y - 1), out var up))
+                state.Up = up;
+            if (_states.TryGetValue((x, y + 1), out var down))
+                state.Down = down;
+            if (_states.TryGetValue((x - 1, y), out var left))
+                state.Left = left;
+            if (_states.TryGetValue((x + 1, y), out var right))
+                state.Right = right;
+        }
+    }
+
+    public StateP1(char value, (int x, int y) pos)
+    {
+        Value = value;
+        Up = Down = Left = Right = this;
+        _states[pos] = this;
+    }
+
+    public char Value { get; }
+
+    public StateP1 Up { get; private set; }
+    public StateP1 Down { get; private set; }
+    public StateP1 Left { get; private set; }
+    public StateP1 Right { get; private set; }
 }
