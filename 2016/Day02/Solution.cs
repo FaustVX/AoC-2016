@@ -19,7 +19,15 @@ public class Solution : ISolver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        var code = "";
+        var machine = new StateMachine<StateP2>() { CurrentState = StateP2._5 };
+        foreach (var line in input.AsSpan().EnumerateLines())
+        {
+            foreach (var c in line)
+                machine.Move(c);
+            code += machine.CurrentState.Value;
+        }
+        return code;
     }
 }
 
@@ -89,4 +97,52 @@ public class StateP1 : StateMachine<StateP1>.IState
     public StateP1 Down { get; private set; }
     public StateP1 Left { get; private set; }
     public StateP1 Right { get; private set; }
+}
+
+
+public class StateP2 : StateMachine<StateP2>.IState
+{
+    private static readonly Dictionary<(int x, int y), StateP2> _states = new(capacity: 13);
+    public static readonly StateP2 _1 = new('1', (2, 0));
+    public static readonly StateP2 _2 = new('2', (1, 1));
+    public static readonly StateP2 _3 = new('3', (2, 1));
+    public static readonly StateP2 _4 = new('4', (3, 1));
+    public static readonly StateP2 _5 = new('5', (0, 2));
+    public static readonly StateP2 _6 = new('6', (1, 2));
+    public static readonly StateP2 _7 = new('7', (2, 2));
+    public static readonly StateP2 _8 = new('8', (3, 2));
+    public static readonly StateP2 _9 = new('9', (4, 2));
+    public static readonly StateP2 _A = new('A', (1, 3));
+    public static readonly StateP2 _B = new('B', (2, 3));
+    public static readonly StateP2 _C = new('C', (3, 3));
+    public static readonly StateP2 _D = new('D', (2, 4));
+
+    static StateP2()
+    {
+        foreach (var ((x, y), state) in _states)
+        {
+            if (_states.TryGetValue((x, y - 1), out var up))
+                state.Up = up;
+            if (_states.TryGetValue((x, y + 1), out var down))
+                state.Down = down;
+            if (_states.TryGetValue((x - 1, y), out var left))
+                state.Left = left;
+            if (_states.TryGetValue((x + 1, y), out var right))
+                state.Right = right;
+        }
+    }
+
+    public StateP2(char value, (int x, int y) pos)
+    {
+        Value = value;
+        Up = Down = Left = Right = this;
+        _states[pos] = this;
+    }
+
+    public char Value { get; }
+
+    public StateP2 Up { get; private set; }
+    public StateP2 Down { get; private set; }
+    public StateP2 Left { get; private set; }
+    public StateP2 Right { get; private set; }
 }
