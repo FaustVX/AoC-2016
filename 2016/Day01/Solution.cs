@@ -9,10 +9,9 @@ public class Solution : ISolver //, IDisplay
         var span = input.AsSpan();
         var pos = (x: 0, y: 0);
         var orientation = Orientation.North;
-        while (true)
+        foreach (var split in input.EnumerateSplits(", "))
         {
-            var comma = span.IndexOf(',');
-            orientation = (span[0], orientation) switch
+            orientation = (split[0], orientation) switch
             {
                 ('L', Orientation.North) or ('R', Orientation.South) => Orientation.West,
                 ('L', Orientation.East) or ('R', Orientation.West) => Orientation.North,
@@ -20,19 +19,14 @@ public class Solution : ISolver //, IDisplay
                 ('L', Orientation.West) or ('R', Orientation.East) => Orientation.South,
                 _ => throw new UnreachableException(),
             };
-            var dist = int.Parse(comma is -1 ? span[1..] : span[1..comma]);
+            var dist = int.Parse(split[1..]);
             pos = Move(orientation, dist, pos);
-            if (comma is -1)
-                return Math.Abs(pos.x) + Math.Abs(pos.y);
-            span = span[(comma + 2)..];
         }
+        return Math.Abs(pos.x) + Math.Abs(pos.y);
     }
 
     private static (int x, int y) Move(Orientation orientation, int dist, (int x, int y) pos)
-    {
-        var (x, y) = Dir(orientation);
-        return (x * dist + pos.x, y * dist + pos.y);
-    }
+    => Dir(orientation).Times(dist).Add(pos);
 
     private static (int x, int y) Dir(Orientation orientation)
     => orientation switch
@@ -53,10 +47,9 @@ public class Solution : ISolver //, IDisplay
         {
             pos,
         };
-        while (true)
+        foreach (var split in input.EnumerateSplits(", "))
         {
-            var comma = span.IndexOf(',');
-            orientation = (span[0], orientation) switch
+            orientation = (split[0], orientation) switch
             {
                 ('L', Orientation.North) or ('R', Orientation.South) => Orientation.West,
                 ('L', Orientation.East) or ('R', Orientation.West) => Orientation.North,
@@ -64,18 +57,16 @@ public class Solution : ISolver //, IDisplay
                 ('L', Orientation.West) or ('R', Orientation.East) => Orientation.South,
                 _ => throw new UnreachableException(),
             };
-            var dist = int.Parse(comma is -1 ? span[1..] : span[1..comma]);
-            var (x, y) = Dir(orientation);
+            var dist = int.Parse(split[1..]);
+            var dir = Dir(orientation);
             for (var i = 0; i < dist; i++)
             {
-                pos = (pos.x + x, pos.y + y);
+                pos = pos.Add(dir);
                 if (!set.Add(pos))
                     return Math.Abs(pos.x) + Math.Abs(pos.y);
             }
-            if (comma is -1)
-                return Math.Abs(pos.x) + Math.Abs(pos.y);
-            span = span[(comma + 2)..];
         }
+        return Math.Abs(pos.x) + Math.Abs(pos.y);
     }
 
     enum Orientation

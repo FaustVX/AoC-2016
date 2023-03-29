@@ -84,7 +84,7 @@ public class StateP1 : StateMachine<StateP1>.IState
         }
     }
 
-    public StateP1(char value, (int x, int y) pos)
+    private StateP1(char value, (int x, int y) pos)
     {
         Value = value;
         Up = Down = Left = Right = this;
@@ -132,7 +132,7 @@ public class StateP2 : StateMachine<StateP2>.IState
         }
     }
 
-    public StateP2(char value, (int x, int y) pos)
+    private StateP2(char value, (int x, int y) pos)
     {
         Value = value;
         Up = Down = Left = Right = this;
