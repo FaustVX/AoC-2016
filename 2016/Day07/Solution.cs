@@ -4,19 +4,8 @@ namespace AdventOfCode.Y2016.Day07;
 [ProblemName("Internet Protocol Version 7")]
 public class Solution : ISolver //, IDisplay
 {
-    delegate bool Function(ReadOnlySpan<char> ip);
-
     public object PartOne(string input)
-    => Count(input, SupportsTLS);
-
-    static int Count(ReadOnlySpan<char> input, Function func)
-    {
-        var count = 0;
-        foreach (var ip in input.EnumerateLines())
-            if (func(ip))
-                count++;
-        return count;
-    }
+    => input.AsSpan().CountLinesWhere(SupportsTLS);
 
     static bool SupportsTLS(ReadOnlySpan<char> ip)
     {
@@ -87,5 +76,5 @@ public class Solution : ISolver //, IDisplay
     }
 
     public object PartTwo(string input)
-    => Count(input, SupportsSSL);
+    => input.AsSpan().CountLinesWhere(SupportsSSL);
 }

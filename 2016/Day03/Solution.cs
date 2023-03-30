@@ -5,22 +5,16 @@ namespace AdventOfCode.Y2016.Day03;
 public class Solution : ISolver //, IDisplay
 {
     public object PartOne(string input)
-    {
-        var count = 0;
-        foreach (var line in input.AsSpan().EnumerateLines())
-        {
-            var (a, b, c) = ParseTriangle(line);
-            if (IsTriangle(a, b, c))
-                count++;
-        }
-        return count;
-    }
+    => input.AsSpan().CountLinesWhere(static line => IsTriangle(ParseTriangle(line)));
 
     static (int, int, int) ParseTriangle(ReadOnlySpan<char> span)
     => (int.Parse(span.Slice(0, 5)), int.Parse(span.Slice(5, 5)), int.Parse(span.Slice(10, 5)));
 
     static bool IsTriangle(int a, int b, int c)
     => a + b > c && a + c > b && b + c > a;
+
+    static bool IsTriangle((int a, int b, int c) tri)
+    => IsTriangle(tri.a, tri.b, tri.c);
 
     static bool IsTriangle<T>(Span<T> span, Func<T, int> func)
     => IsTriangle(func(span[0]), func(span[1]), func(span[2]));
