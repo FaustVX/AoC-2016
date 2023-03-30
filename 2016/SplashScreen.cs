@@ -47,9 +47,16 @@ class SplashScreenImpl : ISplashScreen
         Write(0xcccccc, false, " 9 ");
         Write(0x666666, false, "**\n           ----|:::::::::::|   |---------------------------   ");
         Write(0xcccccc, false, " 8 ");
-        Write(0x666666, false, "**\n            || |:::::::::::|   |  //| ||  / / / ||      ||    ");
-        Write(0xcccccc, false, " 7 ");
         Write(0x666666, false, "**\n            || |");
+        Write(0x333333, false, "::");
+        Write(0xff0000, true, ":::");
+        Write(0x333333, false, ":");
+        Write(0x9900, true, ":::");
+        Write(0x333333, false, "::");
+        Write(0x666666, false, "|   |  //| ||  / / / ||      ||    ");
+        Write(0xcccccc, false, " 7 ");
+        Write(0xffff66, false, "**\n           ");
+        Write(0x666666, false, " || |");
         Write(0x333333, false, "::");
         Write(0xff0000, true, ":");
         Write(0x333333, false, ":");
