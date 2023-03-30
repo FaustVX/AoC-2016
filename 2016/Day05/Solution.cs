@@ -7,24 +7,20 @@ namespace AdventOfCode.Y2016.Day05;
 [ProblemName("How About a Nice Game of Chess?")]
 public class Solution : ISolver //, IDisplay
 {
-    delegate bool IsValid(Span<byte> span, out byte hexa);
+    delegate bool IsValid(Span<byte> span, out byte pos, out byte hexa);
     public object PartOne(string input)
     {
         Span<char> hexa = stackalloc char[8];
+        var index = -1;
 
-        var index = Execute(input, 0, IsValid, out hexa[0]);
-        index = Execute(input, index + 1, IsValid, out hexa[1]);
-        index = Execute(input, index + 1, IsValid, out hexa[2]);
-        index = Execute(input, index + 1, IsValid, out hexa[3]);
-        index = Execute(input, index + 1, IsValid, out hexa[4]);
-        index = Execute(input, index + 1, IsValid, out hexa[5]);
-        index = Execute(input, index + 1, IsValid, out hexa[6]);
-        index = Execute(input, index + 1, IsValid, out hexa[7]);
+        foreach (ref var c in hexa)
+            index = Execute(input, index + 1, IsValid, out _, out c);
 
         return new string(hexa);
 
-        static bool IsValid(Span<byte> destination, out byte hexa)
+        static bool IsValid(Span<byte> destination, out byte pos, out byte hexa)
         {
+            pos = 0;
             if (destination is [0x00, 0x00, (0, var val), ..])
             {
                 hexa = val;
@@ -35,7 +31,7 @@ public class Solution : ISolver //, IDisplay
         }
     }
 
-    static int Execute(string input, int startIndex, IsValid isValid, out char hexa)
+    static int Execute(string input, int startIndex, IsValid isValid, out byte pos, out char hexa)
     {
         ReadOnlySpan<byte> nines = stackalloc byte[]
         {
@@ -56,7 +52,7 @@ public class Solution : ISolver //, IDisplay
         {
             ToSpan(i, source[input.Length..]);
             MD5.HashData(source, destination);
-            if (isValid(destination, out var val))
+            if (isValid(destination, out pos, out var val))
             {
                 hexa = (char)(val <= 9 ? val + '0' : (val - 10) + 'a');
                 return i;
@@ -104,7 +100,29 @@ public class Solution : ISolver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        var hexas = new char[8];
+        byte pos = 0;
+        char c;
+        var index = -1;
+
+        for (var i = 0; i < hexas.Length; i++)
+        {
+            index = Execute(input, index + 10_000, IsValid, out pos, out c);
+            hexas[pos] = c;
+        }
+
+        return new string(hexas);
+
+        bool IsValid(Span<byte> destination, out byte pos, out byte hexa)
+        {
+            if (destination is [0x00, 0x00, (0, <= 0x7 and var p), (var val, _), ..])
+            {
+                (pos, hexa) = (p, val);
+                return hexas[pos] == '\0';
+            }
+            (pos, hexa) = (default, default);
+            return false;
+        }
     }
 }
 
