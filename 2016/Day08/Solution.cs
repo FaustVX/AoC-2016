@@ -7,9 +7,12 @@ namespace AdventOfCode.Y2016.Day08;
 public class Solution : ISolver //, IDisplay
 {
     public object PartOne(string input)
+    => Execute(input).CountOn();
+
+    static Screen Execute(ReadOnlySpan<char> input)
     {
         var screen = new Screen();
-        foreach (var line in input.AsSpan().EnumerateLines())
+        foreach (var line in input.EnumerateLines())
             switch (new SpanSplitEnumerator(line, " x=", true))
             {
                 case ["rect", var a, var b]:
@@ -24,13 +27,11 @@ public class Solution : ISolver //, IDisplay
                 default:
                     throw new UnreachableException();
             }
-        return screen.CountOn();
+        return screen;
     }
 
     public object PartTwo(string input)
-    {
-        return 0;
-    }
+    => Execute(input).ToString();
 }
 
 readonly ref struct Screen
@@ -67,4 +68,17 @@ readonly ref struct Screen
             for (var j = enumerator.Length - 1; j >= 1; j--)
                 (enumerator[j - 1], enumerator[j]) = (enumerator[j], enumerator[j - 1]);
     }
+
+    public void Print()
+    {
+        for (var y = 0; y < _screen.Width; y++)
+        {
+            foreach (var pixel in _screen.GetColumn(y))
+                Console.Write(pixel ? '#' : ' ');
+            Console.WriteLine();
+        }
+    }
+
+    public override string ToString()
+    => Globals.IsTestInput ? "" : OCR.GetOCR<OCR.Char5x6>(_screen, 0);
 }
