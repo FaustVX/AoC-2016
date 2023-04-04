@@ -12,10 +12,16 @@ public class Solution : ISolver //, IDisplay
         return length;
     }
 
-    public object PartTwo(string input)
+    static long ParseMarker(Marker marker)
     {
-        return 0;
+        long length = marker.TextBefore.Length;
+        foreach (var m in new MarkerEnumerable() { Buffer = marker.TextRepeated })
+            length += ParseMarker(m) * marker.Repeat;
+        return length;
     }
+
+    public object PartTwo(string input)
+    => ParseMarker(new() { TextBefore = null, Repeat = 1, TextRepeated = input });
 }
 
 ref struct MarkerEnumerable
