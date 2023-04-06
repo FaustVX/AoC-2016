@@ -6,8 +6,8 @@ class SplashScreenImpl : ISplashScreen
     {
         var color = Console.ForegroundColor;
         Write(0xcc00, false, "           ▄█▄ ▄▄█ ▄ ▄ ▄▄▄ ▄▄ ▄█▄  ▄▄▄ ▄█  ▄▄ ▄▄▄ ▄▄█ ▄▄▄\n           █▄█ █ █ █ █ █▄█ █ █ █   █ █ █▄ ");
-        Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  int y = 2016;\n           ");
-        Write(0xcc00, false, " \n           ");
+        Write(0xcc00, false, " █  █ █ █ █ █▄█\n           █ █ █▄█ ▀▄▀ █▄▄ █ █ █▄  █▄█ █   █▄ █▄█ █▄█ █▄▄  {:year 2016}\n            ");
+        Write(0xcc00, false, "\n           ");
         Write(0x666666, false, "                    *                                   \n                               |           ");
         Write(0x666666, false, "                        \n                             +-|---+                               \n       ");
         Write(0x666666, false, "                     /  |  /|                               \n                           +-----+ |   ");
@@ -37,9 +37,15 @@ class SplashScreenImpl : ISplashScreen
         Write(0xcccccc, false, "14 ");
         Write(0x666666, false, "**\n               +-----------+   |===| /  //||:::::::::::|/     ");
         Write(0xcccccc, false, "13 ");
-        Write(0x666666, false, "**\n               |:::::::::::|   |===|/__//___________________  ");
+        Write(0x666666, false, "**\n               |");
+        Write(0xff0000, true, ":");
+        Write(0x333333, false, ":");
+        Write(0xff0000, true, ":");
+        Write(0x333333, false, "::::::::");
+        Write(0x666666, false, "|   |===|/__//___________________  ");
         Write(0xcccccc, false, "12 ");
-        Write(0x666666, false, "**\n               |:::::::::::|   |______//|_____...._________   ");
+        Write(0xffff66, false, "**\n           ");
+        Write(0x666666, false, "    |:::::::::::|   |______//|_____...._________   ");
         Write(0xcccccc, false, "11 ");
         Write(0x666666, false, "**\n               |");
         Write(0xff0000, true, ":");

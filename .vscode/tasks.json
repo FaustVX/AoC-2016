@@ -148,7 +148,7 @@
             "options": {
                 "statusbar": {
                     "label": "$(note)",
-                    "tooltip": "Display",
+                    "tooltip": "Format today files",
                 },
             },
         },
