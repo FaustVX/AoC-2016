@@ -16,7 +16,7 @@ public struct Bot
     public bool IsComparedValues
     => (_value2, _value1) == Compare;
 
-    public void GiveValues(ReadOnlySpan<Bot> bots, Span<int> outputs)
+    public void GiveValues(Span<Bot> bots, Span<int> outputs)
     {
         if (!IsInit || !Has2Values)
             return;
@@ -25,7 +25,7 @@ public struct Bot
         GiveValue(GiveLowTo, bots, outputs, _value1);
         GiveValue(GiveHighTo, bots, outputs, _value2);
 
-        static void GiveValue((bool isBot, int id) giveTo, ReadOnlySpan<Bot> bots, Span<int> outputs, int value)
+        static void GiveValue((bool isBot, int id) giveTo, Span<Bot> bots, Span<int> outputs, int value)
         {
             if (giveTo.isBot)
                 bots[giveTo.id].AcceptValue(value, bots, outputs);
@@ -34,7 +34,7 @@ public struct Bot
         }
     }
 
-    public void AcceptValue(int value, ReadOnlySpan<Bot> bots, Span<int> outputs)
+    public void AcceptValue(int value, Span<Bot> bots, Span<int> outputs)
     {
         if (_value1 == 0)
             _value1 = value;
