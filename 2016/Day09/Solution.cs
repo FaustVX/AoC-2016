@@ -60,7 +60,8 @@ ref struct MarkerEnumerable
         var count = int.Parse(countSpan);
         if (!SplitAt(ref _buffer, ')', out var repeatSpan))
             return false;
-        Current = Current with {
+        Current = Current with
+        {
             Repeat = int.Parse(repeatSpan),
             TextRepeated = _buffer[..count],
         };

@@ -32,9 +32,9 @@ public class Solution : ISolver //, IDisplay
     => orientation switch
     {
         Orientation.North => (0, -1),
-        Orientation.East  => (+1, 0),
+        Orientation.East => (+1, 0),
         Orientation.South => (0, +1),
-        Orientation.West  => (-1, 0),
+        Orientation.West => (-1, 0),
         _ => throw new UnreachableException(),
     };
 
