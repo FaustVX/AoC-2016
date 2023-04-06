@@ -41,7 +41,12 @@ public class Solution : ISolver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        Span<Bot> bots = stackalloc Bot[Globals.IsTestInput ? 3 : 210];
+        Span<int> outputs = stackalloc int[Globals.IsTestInput ? 3 : 21];
+
+        Execute(input, bots, outputs);
+
+        return outputs[0] * outputs[1] * outputs[2];
     }
 }
 
