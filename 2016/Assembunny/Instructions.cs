@@ -1,6 +1,4 @@
 #nullable enable
-using System.Runtime.InteropServices;
-
 namespace AdventOfCode.Y2016.Assembunny;
 
 interface IInstruction
@@ -109,16 +107,12 @@ file sealed record class JumpNonZero(IntOrReg Value, IntOrReg Offset) : IInstruc
     }
 }
 
-[StructLayout(LayoutKind.Explicit)]
 file readonly struct IntOrReg
 {
-    [FieldOffset(0)]
     public readonly bool IsReg;
-    [FieldOffset(1)]
     public readonly int Value;
 
-    [FieldOffset(1)]
-    public readonly char Reg;
+    public readonly char Reg => (char)(Value + 'a');
 
     public int Compute(Computer computer)
     {
@@ -130,17 +124,20 @@ file readonly struct IntOrReg
     public IntOrReg(ReadOnlySpan<char> input)
     {
         if (int.TryParse(input, out var value))
-            (Value, IsReg) = (value, false);
+            this = new(value);
         else
-            (Reg, IsReg) = (input[0], true);
+            this = new(input[0]);
     }
 
     public IntOrReg(int input)
     => (Value, IsReg) = (input, false);
 
     public IntOrReg(char input)
-    => (Reg, IsReg) = (input, true);
+    => (Value, IsReg) = (input - 'a', true);
 
     public static implicit operator IntOrReg(ReadOnlySpan<char> input)
     => new(input);
+
+    public override string ToString()
+    => IsReg ? Reg.ToString() : Value.ToString();
 }
