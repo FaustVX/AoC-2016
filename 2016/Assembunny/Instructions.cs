@@ -1,5 +1,5 @@
 #nullable enable
-namespace AdventOfCode.Y2016.Day12;
+namespace AdventOfCode.Y2016.Assembunny;
 
 interface IInstruction
 {
