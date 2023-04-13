@@ -8,26 +8,18 @@ interface IInstruction
     public static IInstruction Parse(ReadOnlySpan<char> line)
     => line.EnumerateSplits(" ") switch
     {
-        ["cpy", var from, var to] when int.TryParse(from, out var value) => new CopyValue(value, to[0]),
-        ["cpy", var from, var to] => new CopyRegister(from[0], to[0]),
+        ["cpy", var from, var to] => new Copy(from, to[0]),
         ["inc", var reg] => new Increment(reg[0]),
         ["dec", var reg] => new Decrement(reg[0]),
-        ["jnz", var from, var offset] when int.TryParse(from, out var value) => new JumpNonZeroValue(value, int.Parse(offset)),
-        ["jnz", var from, var offset] => new JumpNonZeroRegister(from[0], int.Parse(offset)),
+        ["jnz", var from, var offset] => new JumpNonZero(from, offset),
         _ => throw new UnreachableException(),
     };
 }
 
-file sealed record class CopyValue(int Value, char To) : IInstruction
+file sealed record class Copy(IntOrReg Value, char To) : IInstruction
 {
     void IInstruction.Execute(Computer computer)
-    => computer.Registers[To - 'a'] = Value;
-}
-
-file sealed record class CopyRegister(char From, char To) : IInstruction
-{
-    void IInstruction.Execute(Computer computer)
-    => computer.Registers[To - 'a'] = computer.Registers[From - 'a'];
+    => computer.Registers[To - 'a'] = Value.Compute(computer);
 }
 
 file sealed record class Increment(char Register) : IInstruction
@@ -42,20 +34,41 @@ file sealed record class Decrement(char Register) : IInstruction
     => computer.Registers[Register - 'a']--;
 }
 
-file sealed record class JumpNonZeroValue(int Value, int Offset) : IInstruction
+file sealed record class JumpNonZero(IntOrReg Value, IntOrReg Offset) : IInstruction
 {
     void IInstruction.Execute(Computer computer)
     {
-        if (Value != 0)
-            computer.PC += Offset - 1;
+        if (Value.Compute(computer) != 0)
+            computer.PC += Offset.Compute(computer) - 1;
     }
 }
 
-file sealed record class JumpNonZeroRegister(char Register, int Offset) : IInstruction
+[StructLayout(LayoutKind.Explicit)]
+file readonly struct IntOrReg
 {
-    void IInstruction.Execute(Computer computer)
+    [FieldOffset(0)]
+    private readonly bool _isReg;
+    [FieldOffset(1)]
+    public readonly int Value;
+
+    [FieldOffset(1)]
+    public readonly char Reg;
+
+    public int Compute(Computer computer)
     {
-        if (computer.Registers[Register - 'a'] != 0)
-            computer.PC += Offset - 1;
+        if (_isReg)
+            return computer.Registers[Reg - 'a'];
+        return Value;
     }
+
+    public IntOrReg(ReadOnlySpan<char> input)
+    {
+        if (int.TryParse(input, out var value))
+            (Value, _isReg) = (value, false);
+        else
+            (Reg, _isReg) = (input[0], true);
+    }
+
+    public static implicit operator IntOrReg(ReadOnlySpan<char> input)
+    => new(input);
 }
