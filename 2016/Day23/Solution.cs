@@ -26,6 +26,13 @@ public class Solution : ISolver //, IDisplay
 
     public object PartTwo(string input)
     {
-        return 0;
+        var computer = new Computer()
+        {
+            Instructions = ParseInstructions(input.AsMemory()).ToArray(),
+        };
+        if (!Globals.IsTestInput)
+            computer.Registers[0] = 12;
+        computer.Run();
+        return computer.Registers[0];
     }
 }

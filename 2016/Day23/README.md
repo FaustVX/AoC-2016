@@ -47,3 +47,13 @@ The rest of the electronics seem to place the keypad entry (the number of eggs, 
 _What value_ should be sent to the safe?
 
 
+## --- Part Two ---
+The safe doesn't open, but it _does_ make several angry noises to express its frustration.
+
+You're quite sure your logic is working correctly, so the only other thing is... you check the painting again. As it turns out, colored eggs are still eggs. Now you count `12`.
+
+As you run the program with this new input, the prototype computer begins to _overheat_. You wonder what's taking so long, and whether the lack of any instruction more powerful than "add one" has anything to do with it. Don't bunnies usually _multiply_?
+
+Anyway, _what value_ should actually be sent to the safe?
+
+
