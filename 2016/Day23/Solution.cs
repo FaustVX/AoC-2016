@@ -1,8 +1,9 @@
 #nullable enable
 using AdventOfCode.Y2016.Assembunny;
-namespace AdventOfCode.Y2016.Day12;
 
-[ProblemName("Leonardo's Monorail")]
+namespace AdventOfCode.Y2016.Day23;
+
+[ProblemName("Safe Cracking")]
 public class Solution : ISolver //, IDisplay
 {
     public object PartOne(string input)
@@ -11,6 +12,8 @@ public class Solution : ISolver //, IDisplay
         {
             Instructions = ParseInstructions(input.AsMemory()).ToArray(),
         };
+        if (!Globals.IsTestInput)
+            computer.Registers[0] = 7;
         computer.Run();
         return computer.Registers[0];
     }
@@ -27,7 +30,8 @@ public class Solution : ISolver //, IDisplay
         {
             Instructions = ParseInstructions(input.AsMemory()).ToArray(),
         };
-        computer.Registers[2] = 1;
+        if (!Globals.IsTestInput)
+            computer.Registers[0] = 12;
         computer.Run();
         return computer.Registers[0];
     }
