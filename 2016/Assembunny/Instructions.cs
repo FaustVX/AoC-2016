@@ -23,13 +23,13 @@ interface IInstruction
 
 file sealed record class Invalid() : IInstruction
 {
+    void IInstruction.Toggle()
+    => throw new NotImplementedException();
+
     IInstruction? IInstruction.ToggledInstruction { get; set; }
 
     void IInstruction.ExecuteSelf(Computer computer)
     { }
-
-    void IInstruction.Toggle()
-    => throw new NotImplementedException();
 }
 
 file sealed record class Copy(IntOrReg Value, char To) : IInstruction
@@ -40,7 +40,8 @@ file sealed record class Copy(IntOrReg Value, char To) : IInstruction
         null => new JumpNonZero(Value, new(To)),
         _ => null,
     };
-    IInstruction? IInstruction.ToggledInstruction { get; set; } = null;
+
+    IInstruction? IInstruction.ToggledInstruction { get; set; }
 
     void IInstruction.ExecuteSelf(Computer computer)
     => computer.Registers[To - 'a'] = Value.Compute(computer);
@@ -55,10 +56,11 @@ file sealed record class Toggle(IntOrReg Register) : IInstruction
         (null, { IsReg: false }) => new Invalid(),
         _ => null,
     };
-    IInstruction? IInstruction.ToggledInstruction { get; set; } = null;
+
+    IInstruction? IInstruction.ToggledInstruction { get; set; }
 
     void IInstruction.ExecuteSelf(Computer computer)
-    => computer.Instructions.Span[Register.Compute(computer)].Toggle();
+    => computer[Register.Compute(computer) + computer.PC - 1]?.Toggle();
 }
 
 file sealed record class Increment(char Register) : IInstruction
@@ -69,7 +71,8 @@ file sealed record class Increment(char Register) : IInstruction
         null => new Decrement(Register),
         _ => null,
     };
-    IInstruction? IInstruction.ToggledInstruction { get; set; } = null;
+
+    IInstruction? IInstruction.ToggledInstruction { get; set; }
 
     void IInstruction.ExecuteSelf(Computer computer)
     => computer.Registers[Register - 'a']++;
@@ -83,7 +86,8 @@ file sealed record class Decrement(char Register) : IInstruction
         null => new Increment(Register),
         _ => null,
     };
-    IInstruction? IInstruction.ToggledInstruction { get; set; } = null;
+
+    IInstruction? IInstruction.ToggledInstruction { get; set; }
 
     void IInstruction.ExecuteSelf(Computer computer)
     => computer.Registers[Register - 'a']--;
@@ -98,7 +102,8 @@ file sealed record class JumpNonZero(IntOrReg Value, IntOrReg Offset) : IInstruc
         (null, { IsReg: false }) => new Invalid(),
         _ => null,
     };
-    IInstruction? IInstruction.ToggledInstruction { get; set; } = null;
+
+    IInstruction? IInstruction.ToggledInstruction { get; set; }
 
     void IInstruction.ExecuteSelf(Computer computer)
     {

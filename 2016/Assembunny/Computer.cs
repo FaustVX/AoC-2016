@@ -10,6 +10,16 @@ class Computer
     public void Run()
     {
         while (PC < Instructions.Length)
-            Instructions.Span[PC++].Execute(this);
+            this[PC++]?.Execute(this);
+    }
+
+    public IInstruction? this[int pos]
+    {
+        get
+        {
+            if (pos >= 0 && pos < Instructions.Length)
+                return Instructions.Span[pos];
+            return null;
+        }
     }
 }
